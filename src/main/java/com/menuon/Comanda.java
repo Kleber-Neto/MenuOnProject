@@ -15,6 +15,7 @@ public class Comanda {
     private String data;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonProperty("pedidos") // ✅ força o nome no JSON
     private List<ItemComanda> pedidos;
 
     // ✅ Construtor padrão
