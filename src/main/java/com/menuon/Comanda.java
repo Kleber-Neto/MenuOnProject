@@ -54,11 +54,11 @@ public class Comanda {
         this.data = data;
     }
 
-    public List<ItemComanda> getItens() {
-        return itens;
+    public List<ItemComanda> getPedido() {
+        return pedidos;
     }
 
-    public void setItens(List<ItemComanda> itens) {
-        this.itens = itens;
+    public void setPedidos(List<ItemComanda> pedidos) {
+        this.pedidos = pedidos;
     }
 }
