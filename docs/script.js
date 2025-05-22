@@ -1,5 +1,3 @@
-
-
 const api = 'https://menuonproject.onrender.com/api/comandas';
 
 const produtos = [
@@ -82,6 +80,8 @@ async function carregarComandas() {
 document.addEventListener('DOMContentLoaded', () => {
     carregarComandas();
 });
+
+
 
 // const api = 'https://menuonproject.onrender.com/api/comandas';
 
