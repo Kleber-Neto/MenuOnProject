@@ -9,10 +9,18 @@
 <body>
     <h1>Cardápio</h1>
     <form id="comanda-form">
-        <input type="text" id="cliente" placeholder="Cliente" required>
+        <label for="cliente">Nome do Cliente:</label>
+        <input type="text" id="cliente" name="cliente" required><br><br>
+
         <div id="produtos"></div>
-        <button type="submit">Salvar</button>
+
+        <br>
+        <button type="submit">Salvar Comanda</button>
     </form>
+
+    <h2>Comandas Salvas</h2>
+    <ul id="lista-comandas"></ul>
+
     <script src="script.js"></script>
 </body>
 </html>
