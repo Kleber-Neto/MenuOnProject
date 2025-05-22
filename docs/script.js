@@ -71,7 +71,7 @@ async function carregarComandas() {
 
     comandas.forEach(comanda => {
         const item = document.createElement('li');
-        item.textContent = `Cliente: ${comanda.cliente}, Total: ${comanda.valorTotal}, Data: ${comanda.data}`;
+        item.textContent = `Cliente: ${comanda.cliente}, Pedidos: ${comanda.pedidos}, Total: ${comanda.valorTotal}, Data: ${comanda.data}`;
         lista.appendChild(item);
     });
 }
