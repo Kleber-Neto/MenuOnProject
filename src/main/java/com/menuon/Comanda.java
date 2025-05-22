@@ -2,6 +2,7 @@ package com.menuon;
 
 import jakarta.persistence.*;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Comanda {
