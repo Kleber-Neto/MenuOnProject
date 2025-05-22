@@ -14,7 +14,7 @@ public class Comanda {
     private Double valorTotal;
     private String data;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemComanda> pedidos;
 
     // ✅ Construtor padrão
