@@ -71,11 +71,15 @@ async function carregarComandas() {
 
     comandas.forEach(comanda => {
         const item = document.createElement('li');
-        
-        // Formata os pedidos
-        const pedidosTexto = comanda.pedidos.map(p => 
-            `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
-        ).join(', ');
+
+        let pedidosTexto = '';
+        if (Array.isArray(comanda.pedidos) && comanda.pedidos.length > 0) {
+            pedidosTexto = comanda.pedidos.map(p => 
+                `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
+            ).join(', ');
+        } else {
+            pedidosTexto = 'Nenhum pedido';
+        }
 
         item.innerHTML = `
             <strong>Cliente:</strong> ${comanda.cliente}<br>
@@ -87,6 +91,7 @@ async function carregarComandas() {
         lista.appendChild(item);
     });
 }
+
 
 
 
