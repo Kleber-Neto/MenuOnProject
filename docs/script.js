@@ -1,5 +1,5 @@
 
-const api = 'https://menuon.onrender.com/api/comandas';
+const api = 'https://menuonproject.onrender.com/api/comandas';
 
 const produtos = [
     { nome: 'Pastel 1', preco: 5.0 },
