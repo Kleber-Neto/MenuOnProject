@@ -15,7 +15,7 @@ public class Comanda {
     private String data;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<ItemComanda> itens;
+    private List<ItemComanda> pedidos;
 
     // ✅ Construtor padrão
     public Comanda() {
