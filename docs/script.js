@@ -89,6 +89,14 @@ async function carregarComandas() {
 }
 
 
+
+
+// ✅ Carrega a lista quando a página for aberta
+document.addEventListener('DOMContentLoaded', () => {
+    carregarComandas();
+});
+
+
 // async function carregarComandas() {
 //     const lista = document.getElementById('lista-comandas');
 //     lista.innerHTML = '';
@@ -102,12 +110,6 @@ async function carregarComandas() {
 //         lista.appendChild(item);
 //     });
 // }
-
-// ✅ Carrega a lista quando a página for aberta
-document.addEventListener('DOMContentLoaded', () => {
-    carregarComandas();
-});
-
 
 
 // const api = 'https://menuonproject.onrender.com/api/comandas';
