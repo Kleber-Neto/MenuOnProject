@@ -71,10 +71,37 @@ async function carregarComandas() {
 
     comandas.forEach(comanda => {
         const item = document.createElement('li');
-        item.textContent = `Cliente: ${comanda.cliente}, Pedidos: ${comanda.pedidos}, Total: ${comanda.valorTotal}, Data: ${comanda.data}`;
+        
+        // Formata os pedidos
+        const pedidosTexto = comanda.pedidos.map(p => 
+            `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
+        ).join(', ');
+
+        item.innerHTML = `
+            <strong>Cliente:</strong> ${comanda.cliente}<br>
+            <strong>Pedidos:</strong> ${pedidosTexto}<br>
+            <strong>Total:</strong> R$ ${comanda.valorTotal}<br>
+            <strong>Data:</strong> ${comanda.data}
+        `;
+
         lista.appendChild(item);
     });
 }
+
+
+// async function carregarComandas() {
+//     const lista = document.getElementById('lista-comandas');
+//     lista.innerHTML = '';
+
+//     const resposta = await fetch(api);
+//     const comandas = await resposta.json();
+
+//     comandas.forEach(comanda => {
+//         const item = document.createElement('li');
+//         item.textContent = `Cliente: ${comanda.cliente}, Total: ${comanda.valorTotal}, Data: ${comanda.data}`;
+//         lista.appendChild(item);
+//     });
+// }
 
 // ✅ Carrega a lista quando a página for aberta
 document.addEventListener('DOMContentLoaded', () => {
