@@ -4,28 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <title>MenuOn</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .produto { margin-bottom: 10px; }
-        button { margin: 0 5px; }
-    </style>
-    <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
+
     <h1>Cardápio</h1>
+
     <form id="comanda-form">
-        <label for="cliente">Nome do Cliente:</label>
-        <input type="text" id="cliente" name="cliente" required><br><br>
+        <label for="cliente">Cliente:</label>
+        <input type="text" id="cliente" required><br><br>
 
-        <div id="produtos"></div>
+        <div id="produtos">
+            <!-- Produtos vão ser inseridos aqui pelo script.js -->
+        </div><br>
 
-        <br>
         <button type="submit">Salvar Comanda</button>
     </form>
 
-    <h2>Comandas Salvas</h2>
-    <ul id="lista-comandas"></ul>
+    <h2>Comandas</h2>
+    <ul id="lista-comandas">
+        <!-- Comandas aparecerão aqui -->
+    </ul>
 
     <script src="script.js"></script>
+
 </body>
-</htm>
+</html>
