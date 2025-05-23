@@ -7,6 +7,9 @@ input, button { margin: 5px; }
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+             background: #333;
+             color: #fff;
+             text-align: center;
         }
         li {
             margin-bottom: 10px;
