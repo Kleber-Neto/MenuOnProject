@@ -56,7 +56,7 @@ public class Comanda {
         this.data = data;
     }
 
-    public List<ItemComanda> getPedido() {
+    public List<ItemComanda> getPedidos() {
         return pedidos;
     }
 
