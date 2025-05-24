@@ -100,19 +100,18 @@ async function carregarComandas() {
             <strong>Total:</strong> R$ ${comanda.valorTotal}<br>
             <strong>Data:</strong> ${comanda.data}<br>
             <button onclick='editarComanda(${JSON.stringify(comanda).replace(/'/g, "\\'")})'>Editar</button>
-            <button onclick='removerComanda(${comanda.id})'>Excluir</button>
+            <button onclick='marcarComoPaga(${comanda.id})'>Pago</button>
         `;
 
         lista.appendChild(item);
     });
 }
 
-async function removerComanda(id) {
-    await fetch(`${api}/${id}`, {
-        method: 'DELETE'
-    });
+async function marcarComoPaga(id) {
+    await fetch(`${api}/${id}/pagar`, { method: 'PUT' });
     carregarComandas();
 }
+
 
 function editarComanda(comanda) {
     document.getElementById('cliente').value = comanda.cliente;

@@ -15,21 +15,19 @@ public class Comanda {
     private Double valorTotal;
     private String data;
 
+    private boolean paga = false; // ✅ Nova flag de status
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonProperty("pedidos") // ✅ força o nome no JSON
     private List<ItemComanda> pedidos;
 
     // ✅ Construtor padrão
     public Comanda() {
     }
 
-    // ✅ Getters e Setters
+    // Getters e Setters
+
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCliente() {
@@ -54,6 +52,14 @@ public class Comanda {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public boolean isPaga() {
+        return paga;
+    }
+
+    public void setPaga(boolean paga) {
+        this.paga = paga;
     }
 
     public List<ItemComanda> getPedidos() {

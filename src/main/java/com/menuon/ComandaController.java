@@ -1,4 +1,3 @@
-
 package com.menuon;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,25 +7,35 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/comandas")
-@CrossOrigin(origins = "*") // ou especifique: "https://kleber-neto.github.io"
+@CrossOrigin(origins = "*")
 public class ComandaController {
 
     @Autowired
     private ComandaRepository comandaRepository;
 
-    // GET: listar todas as comandas
+    // Listar todas as comandas
     @GetMapping
     public List<Comanda> listar() {
-        return comandaRepository.findAll();
+        return comandaRepository.findAll().stream()
+                .filter(c -> !c.isPaga()) // ✅ Mostra só as NÃO pagas na tela principal
+                .toList();
     }
 
-    // POST: criar nova comanda
+    // Listar comandas pagas
+    @GetMapping("/pagas")
+    public List<Comanda> listarPagas() {
+        return comandaRepository.findAll().stream()
+                .filter(Comanda::isPaga)
+                .toList();
+    }
+
+    // Criar nova comanda
     @PostMapping
     public Comanda criar(@RequestBody Comanda comanda) {
         return comandaRepository.save(comanda);
     }
 
-    // PUT: atualizar comanda existente
+    // Atualizar comanda
     @PutMapping("/{id}")
     public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda comandaAtualizada) {
         return comandaRepository.findById(id).map(comanda -> {
@@ -35,10 +44,19 @@ public class ComandaController {
             comanda.setValorTotal(comandaAtualizada.getValorTotal());
             comanda.setData(comandaAtualizada.getData());
             return comandaRepository.save(comanda);
-        }).orElseThrow(() -> new RuntimeException("Comanda não encontrada com id: " + id));
+        }).orElseThrow(() -> new RuntimeException("Comanda não encontrada"));
     }
 
-    // DELETE: excluir comanda
+    // Marcar comanda como paga
+    @PutMapping("/{id}/pagar")
+    public Comanda marcarComoPaga(@PathVariable Long id) {
+        return comandaRepository.findById(id).map(comanda -> {
+            comanda.setPaga(true);
+            return comandaRepository.save(comanda);
+        }).orElseThrow(() -> new RuntimeException("Comanda não encontrada"));
+    }
+
+    // Excluir comanda
     @DeleteMapping("/{id}")
     public void excluir(@PathVariable Long id) {
         comandaRepository.deleteById(id);

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Comandas Pagas - MenuOn</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Comandas Pagas</h1>
+
+    <ul id="lista-comandas">
+        <!-- Comandas pagas aparecerão aqui -->
+    </ul>
+
+    <script>
+        const api = 'https://menuonproject.onrender.com/api/comandas/pagas';
+
+        async function carregarComandasPagas() {
+            const lista = document.getElementById('lista-comandas');
+            lista.innerHTML = '';
+
+            const resposta = await fetch(api);
+            const comandas = await resposta.json();
+
+            comandas.forEach(comanda => {
+                const item = document.createElement('li');
+
+                let pedidosTexto = '';
+                if (Array.isArray(comanda.pedidos) && comanda.pedidos.length > 0) {
+                    pedidosTexto = comanda.pedidos.map(p => 
+                        `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
+                    ).join(', ');
+                } else {
+                    pedidosTexto = 'Nenhum pedido';
+                }
+
+                item.innerHTML = `
+                    <strong>Cliente:</strong> ${comanda.cliente}<br>
+                    <strong>Pedidos:</strong> ${pedidosTexto}<br>
+                    <strong>Total:</strong> R$ ${comanda.valorTotal}<br>
+                    <strong>Data:</strong> ${comanda.data}<br>
+                    <strong>Status:</strong> Pago
+                `;
+
+                lista.appendChild(item);
+            });
+        }
+
+        carregarComandasPagas();
+    </script>
+
+</body>
+</html>
