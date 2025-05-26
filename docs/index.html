@@ -22,13 +22,18 @@
         <button type="submit">Salvar Comanda</button>
     </form>
     <a href="pagas.html" ><button>Comandas Pagas</button></a>
+    <br>
+     <a href="em_aberto.html" ><button>Comandas em aberto</button></a>
 
     <h2>Comandas</h2>
-    <ul id="lista-comandas">
+    <ul id="comandas"></ul>
         <!-- Comandas aparecerão aqui -->
     </ul>
 
     <script src="script.js"></script>
+    <script>
+    carregarComandas('', 'comandas');
+</script>
 
 </body>
 </html>

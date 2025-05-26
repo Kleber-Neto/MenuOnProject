@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Comandas Pagas - MenuOn</title>
+    <title>Comandas em aberto - MenuOn</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-             background: #333;
-             color: #fff;
-             text-align: center;
+            background: #333;
+            color: #fff;
+            text-align: center;
         }
+
         li {
             margin-bottom: 10px;
         }
+
         button {
             margin: 0 2px;
         }
     </style>
 </head>
-<body>
-<h1>Comandas Pagas</h1>
-<ul id="comandas"></ul>
 
-<script src="script.js"></script>
-<script>
-    carregarComandas('/pagas', 'comandas');
-</script>
+<body>
+    <h1>Comandas em Aberto</h1>
+    <ul id="comandas"></ul>
+
+    <script src="script.js"></script>
+    <script>
+        carregarComandas('/em_aberto', 'comandas');
+    </script>
+
 
 
 </body>
+
 </html>

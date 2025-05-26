@@ -6,16 +6,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Comanda {
-
     @Id
     @GeneratedValue
     private Long id;
 
     private String cliente;
+
     private Double valorTotal;
+
     private String data;
 
-    private boolean paga = false; // ✅ Nova flag de status
+    @Column(nullable = false)
+    private String status = "pendente"; // pendente, em_aberto, paga
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemComanda> pedidos;

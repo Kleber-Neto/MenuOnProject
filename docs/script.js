@@ -75,19 +75,19 @@ document.getElementById('comanda-form').addEventListener('submit', async e => {
     e.target.reset();
 });
 
-async function carregarComandas() {
-    const lista = document.getElementById('lista-comandas');
+async function carregarComandas(endpoint, containerId) {
+    const lista = document.getElementById(containerId);
     lista.innerHTML = '';
 
-    const resposta = await fetch(api);
+    const resposta = await fetch(api + endpoint);
     const comandas = await resposta.json();
 
-    comandas.forEach(comanda => {
+    comandas.forEach(c => {
         const item = document.createElement('li');
 
         let pedidosTexto = '';
-        if (Array.isArray(comanda.pedidos) && comanda.pedidos.length > 0) {
-            pedidosTexto = comanda.pedidos.map(p => 
+        if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
+            pedidosTexto = c.pedidos.map(p =>
                 `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
             ).join(', ');
         } else {
@@ -95,21 +95,34 @@ async function carregarComandas() {
         }
 
         item.innerHTML = `
-            <strong>Cliente:</strong> ${comanda.cliente}<br>
-            <strong>Pedidos:</strong> ${pedidosTexto}<br>
-            <strong>Total:</strong> R$ ${comanda.valorTotal}<br>
-            <strong>Data:</strong> ${comanda.data}<br>
-            <button onclick='editarComanda(${JSON.stringify(comanda).replace(/'/g, "\\'")})'>Editar</button>
-            <button onclick='marcarComoPaga(${comanda.id})'>Pago</button>
+            <strong>Cliente:</strong> ${c.cliente}<br>
+            <strong>Total:</strong> ${c.valorTotal}<br>
+            <strong>Data:</strong> ${c.data}<br>
+            <strong>Status:</strong> ${c.status}<br>
+            <strong>Pedidos:</strong> ${c.itens.map(i => `${i.produto} x${i.quantidade}`).join(', ')}<br>
+            <button onclick='editarComanda(${JSON.stringify(c)})'>Editar</button>
+            <button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>
+            <button onclick="marcarComoPago(${c.id})">Pago</button>
         `;
-
         lista.appendChild(item);
     });
 }
+async function marcarComoEmAberto(id) {
+    await fetch(`${api}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'em_aberto' })
+    });
+    location.reload();
+}
 
-async function marcarComoPaga(id) {
-    await fetch(`${api}/${id}/pagar`, { method: 'PUT' });
-    carregarComandas();
+async function marcarComoPago(id) {
+    await fetch(`${api}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'paga' })
+    });
+    location.reload();
 }
 
 
