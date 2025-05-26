@@ -10,7 +10,7 @@ import java.util.List;
 public class ComandaController {
 
     @Autowired
-    private ComandaRepository comandaRepository;
+    private ComandaRepository repository;
 
     public ComandaController(ComandaRepository repository) {
         this.repository = repository;
@@ -32,9 +32,9 @@ public class ComandaController {
     }
 
     @PostMapping
-    public Comanda criar(@RequestBody Comanda comanda) {
+    public Comanda criar(@RequestBody Comanda c) {
         comanda.setStatus("pendente");
-        return repository.save(comanda);
+        return repository.save(c);
     }
 
     @PutMapping("/{id}")
@@ -48,6 +48,6 @@ public class ComandaController {
 
     @DeleteMapping("/{id}")
     public void excluir(@PathVariable Long id) {
-        comandaRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }
