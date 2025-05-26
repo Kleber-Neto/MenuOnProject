@@ -33,17 +33,17 @@ public class ComandaController {
 
     @PostMapping
     public Comanda criar(@RequestBody Comanda c) {
-        comanda.setStatus("pendente");
+        c.setStatus("pendente");
         return repository.save(c);
     }
 
     @PutMapping("/{id}")
     public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda atualizada) {
-        Comanda comanda = repository.findById(id).orElseThrow();
+        Comanda c = repository.findById(id).orElseThrow();
         if (atualizada.getStatus() != null) {
-            comanda.setStatus(atualizada.getStatus());
+            c.setStatus(atualizada.getStatus());
         }
-        return repository.save(comanda);
+        return repository.save(c);
     }
 
     @DeleteMapping("/{id}")
