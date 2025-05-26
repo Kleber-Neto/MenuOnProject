@@ -2,13 +2,15 @@ package com.menuon;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/comandas")
 @CrossOrigin(origins = "*")
 public class ComandaController {
 
-    private final ComandaRepository repository;
+    @Autowired
+    private ComandaRepository comandaRepository;
 
     public ComandaController(ComandaRepository repository) {
         this.repository = repository;

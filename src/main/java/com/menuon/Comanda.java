@@ -16,6 +16,8 @@ public class Comanda {
 
     private String data;
 
+    private boolean paga;
+
     @Column(nullable = false)
     private String status = "pendente"; // pendente, em_aberto, paga
 
@@ -62,6 +64,14 @@ public class Comanda {
 
     public void setPaga(boolean paga) {
         this.paga = paga;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<ItemComanda> getPedidos() {
