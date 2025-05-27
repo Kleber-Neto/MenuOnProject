@@ -44,7 +44,7 @@ public class ComandaController {
         Comanda c = repository.findById(id).orElseThrow();
 
         c.setCliente(atualizada.getCliente());
-        c.setItens(atualizada.getItens());
+        c.setItens(atualizada.getIPedidos());
         c.setValorTotal(atualizada.getValorTotal());
         c.setData(atualizada.getData());
         c.setStatus(atualizada.getStatus());
