@@ -15,18 +15,21 @@ const produtos = [
 const container = document.getElementById('produtos');
 let idEditando = null;
 
-produtos.forEach((produto, index) => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-        <label>
-            <input type="checkbox" id="check-${index}"> ${produto.nome} (R$ ${produto.preco})
-        </label>
-        <button type="button" onclick="alterarQuantidade(${index}, -1)">-</button>
-        <span id="quant-${index}">0</span>
-        <button type="button" onclick="alterarQuantidade(${index}, 1)">+</button>
-    `;
-    container.appendChild(div);
-});
+// Criar os elementos de produto
+if (container) {
+    produtos.forEach((produto, index) => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <label>
+                <input type="checkbox" id="check-${index}"> ${produto.nome} (R$ ${produto.preco})
+            </label>
+            <button type="button" onclick="alterarQuantidade(${index}, -1)">-</button>
+            <span id="quant-${index}">0</span>
+            <button type="button" onclick="alterarQuantidade(${index}, 1)">+</button>
+        `;
+        container.appendChild(div);
+    });
+}
 
 function alterarQuantidade(index, delta) {
     const span = document.getElementById('quant-' + index);
@@ -35,90 +38,106 @@ function alterarQuantidade(index, delta) {
     span.textContent = qtd;
 }
 
-document.getElementById('comanda-form').addEventListener('submit', async e => {
-    e.preventDefault();
+const form = document.getElementById('comanda-form');
+if (form) {
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
 
-    const cliente = document.getElementById('cliente').value;
-    const pedidos = [];
-    let valorTotal = 0;
+        const cliente = document.getElementById('cliente').value;
+        const pedidos = [];
+        let valorTotal = 0;
 
-    produtos.forEach((produto, index) => {
-        if (document.getElementById('check-' + index).checked) {
-            const quantidade = parseInt(document.getElementById('quant-' + index).textContent);
-            if (quantidade > 0) {
-                pedidos.push({ produto: produto.nome, quantidade, precoUnitario: produto.preco });
-                valorTotal += quantidade * produto.preco;
+        produtos.forEach((produto, index) => {
+            if (document.getElementById('check-' + index).checked) {
+                const quantidade = parseInt(document.getElementById('quant-' + index).textContent);
+                if (quantidade > 0) {
+                    pedidos.push({ produto: produto.nome, quantidade, precoUnitario: produto.preco });
+                    valorTotal += quantidade * produto.preco;
+                }
             }
+        });
+
+        const comanda = {
+            cliente,
+            pedidos,
+            valorTotal,
+            data: new Date().toISOString().split('T')[0],
+            status: 'pendente'
+        };
+
+        if (idEditando) {
+            await fetch(`${api}/${idEditando}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(comanda)
+            });
+            idEditando = null;
+        } else {
+            await fetch(api, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(comanda)
+            });
         }
+
+        alert('Comanda salva!');
+        carregarComandas();
+        e.target.reset();
     });
-
-    const comanda = {
-        cliente,
-        pedidos,
-        valorTotal,
-        data: new Date().toISOString().split('T')[0],
-        status: 'pendente'
-    };
-
-    if (idEditando) {
-        await fetch(`${api}/${idEditando}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(comanda)
-        });
-        idEditando = null;
-    } else {
-        await fetch(api, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(comanda)
-        });
-    }
-
-    alert('Comanda salva!');
-    carregarComandas();
-    e.target.reset();
-});
+}
 
 async function carregarComandas() {
     const lista = document.getElementById('comandas');
+    if (!lista) return;
+
     lista.innerHTML = '';
 
     const resposta = await fetch(api);
     const comandas = await resposta.json();
 
-    comandas.forEach(c => {
-        const item = document.createElement('li');
+    const pagina = window.location.pathname;
+    let statusFiltro = 'pendente';
 
-        let pedidosTexto = 'Nenhum pedido';
-        if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
-            pedidosTexto = c.pedidos.map(p => `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`).join(', ');
-        }
+    if (pagina.includes('pagas.html')) {
+        statusFiltro = 'paga';
+    } else if (pagina.includes('em_aberto.html')) {
+        statusFiltro = 'em_aberto';
+    }
 
-        item.innerHTML = `
-            <strong>Cliente:</strong> ${c.cliente}<br>
-            <strong>Total:</strong> R$ ${c.valorTotal}<br>
-            <strong>Data:</strong> ${c.data}<br>
-            <strong>Status:</strong> ${c.status}<br>
-            <strong>Pedidos:</strong> ${pedidosTexto}<br>
-            ${botoesComanda(c)}
-        `;
+    comandas
+        .filter(c => c.status === statusFiltro)
+        .forEach(c => {
+            const item = document.createElement('li');
 
-        lista.appendChild(item);
-    });
+            let pedidosTexto = 'Nenhum pedido';
+            if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
+                pedidosTexto = c.pedidos.map(p => `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`).join(', ');
+            }
+
+            item.innerHTML = `
+                <strong>Cliente:</strong> ${c.cliente}<br>
+                <strong>Total:</strong> R$ ${c.valorTotal}<br>
+                <strong>Data:</strong> ${c.data}<br>
+                <strong>Status:</strong> ${c.status}<br>
+                <strong>Pedidos:</strong> ${pedidosTexto}<br>
+                ${botoesComanda(c, statusFiltro)}
+            `;
+
+            lista.appendChild(item);
+        });
 }
 
-function botoesComanda(c) {
+function botoesComanda(c, statusFiltro) {
     let botoes = '';
 
-    if (c.status === 'pendente') {
+    if (statusFiltro === 'pendente') {
         botoes += `<button onclick='editarComanda(${JSON.stringify(c).replace(/'/g, "\\'")})'>Editar</button>`;
         botoes += `<button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>`;
         botoes += `<button onclick="marcarComoPago(${c.id})">Pago</button>`;
-    } else if (c.status === 'em_aberto') {
+    } else if (statusFiltro === 'em_aberto') {
         botoes += `<button onclick="marcarComoPago(${c.id})">Pago</button>`;
     }
-    // Se for pago, nenhum botão.
+    // Se for "paga" não exibe botão.
 
     return botoes;
 }

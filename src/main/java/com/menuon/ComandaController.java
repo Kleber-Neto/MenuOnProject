@@ -52,6 +52,13 @@ public class ComandaController {
         return repository.save(c);
     }
 
+    @PutMapping("/{id}/status")
+    public Comanda atualizarStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        Comanda c = repository.findById(id).orElseThrow();
+        c.setStatus(body.get("status"));
+        return repository.save(c);
+    }
+
     // // ✅ Atualizar SÓ o STATUS (Pago / Em Aberto)
     // @PutMapping("/{id}/status")
     // public Comanda atualizarStatus(@PathVariable Long id, @RequestBody
