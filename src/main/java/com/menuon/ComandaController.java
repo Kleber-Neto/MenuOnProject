@@ -53,22 +53,25 @@ public class ComandaController {
     // return repository.save(c);
     // }
 
+    // @PutMapping("/{id}")
+    // public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda
+    // atualizada) {
+    // Comanda comanda = repository.findById(id).orElseThrow();
+    // comanda.setCliente(atualizada.getCliente());
+    // comanda.setPedidos(atualizada.getPedidos());
+    // comanda.setValorTotal(atualizada.getValorTotal());
+    // comanda.setData(atualizada.getData());
+    // comanda.setStatus(atualizada.getStatus());
+    // return repository.save(comanda);
+    // }
+
     @PutMapping("/{id}")
     public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda atualizada) {
         Comanda comanda = repository.findById(id).orElseThrow();
-        comanda.setCliente(atualizada.getCliente());
-        comanda.setPedidos(atualizada.getPedidos());
-        comanda.setValorTotal(atualizada.getValorTotal());
-        comanda.setData(atualizada.getData());
-        comanda.setStatus(atualizada.getStatus());
+        if (atualizada.getStatus() != null) {
+            comanda.setStatus(atualizada.getStatus());
+        }
         return repository.save(comanda);
-    }
-
-    @PutMapping("/{id}/status")
-    public Comanda atualizarStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        Comanda c = repository.findById(id).orElseThrow();
-        c.setStatus(body.get("status"));
-        return repository.save(c);
     }
 
     // @PutMapping("/{id}/status")
