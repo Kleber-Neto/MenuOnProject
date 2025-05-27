@@ -70,13 +70,8 @@ if (container) {
         }
 
         alert('Comanda salva!');
-        carregarComandas();
+        carregarComandas(statusAtual);
         e.target.reset();
-
-        produtos.forEach((_, index) => {
-            document.getElementById('check-' + index).checked = false;
-            document.getElementById('quant-' + index).textContent = '0';
-        });
     });
 }
 
@@ -87,7 +82,7 @@ function alterarQuantidade(index, delta) {
     span.textContent = qtd;
 }
 
-async function carregarComandas() {
+async function carregarComandas(statusDesejado) {
     const lista = document.getElementById('comandas');
     if (!lista) return;
 
@@ -96,25 +91,27 @@ async function carregarComandas() {
     const resposta = await fetch(api);
     const comandas = await resposta.json();
 
-    comandas.forEach(c => {
-        const item = document.createElement('li');
+    comandas
+        .filter(c => c.status === statusDesejado)
+        .forEach(c => {
+            const item = document.createElement('li');
 
-        let pedidosTexto = 'Nenhum pedido';
-        if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
-            pedidosTexto = c.pedidos.map(p => `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`).join(', ');
-        }
+            let pedidosTexto = 'Nenhum pedido';
+            if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
+                pedidosTexto = c.pedidos.map(p => `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`).join(', ');
+            }
 
-        item.innerHTML = `
-            <strong>Cliente:</strong> ${c.cliente}<br>
-            <strong>Total:</strong> R$ ${c.valorTotal}<br>
-            <strong>Data:</strong> ${c.data}<br>
-            <strong>Status:</strong> ${c.status}<br>
-            <strong>Pedidos:</strong> ${pedidosTexto}<br>
-            ${botoesComanda(c)}
-        `;
+            item.innerHTML = `
+                <strong>Cliente:</strong> ${c.cliente}<br>
+                <strong>Total:</strong> R$ ${c.valorTotal}<br>
+                <strong>Data:</strong> ${c.data}<br>
+                <strong>Status:</strong> ${c.status}<br>
+                <strong>Pedidos:</strong> ${pedidosTexto}<br>
+                ${botoesComanda(c)}
+            `;
 
-        lista.appendChild(item);
-    });
+            lista.appendChild(item);
+        });
 }
 
 function botoesComanda(c) {
@@ -127,7 +124,7 @@ function botoesComanda(c) {
     } else if (c.status === 'em_aberto') {
         botoes += `<button onclick="marcarComoPago(${c.id})">Pago</button>`;
     }
-    // Se for pago, não mostra botões.
+    // Se for "paga", nenhum botão.
 
     return botoes;
 }
@@ -138,7 +135,7 @@ async function marcarComoEmAberto(id) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'em_aberto' })
     });
-    carregarComandas();
+    carregarComandas(statusAtual);
 }
 
 async function marcarComoPago(id) {
@@ -147,7 +144,7 @@ async function marcarComoPago(id) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'paga' })
     });
-    carregarComandas();
+    carregarComandas(statusAtual);
 }
 
 function editarComanda(comanda) {
@@ -170,8 +167,6 @@ function editarComanda(comanda) {
 
     idEditando = comanda.id;
 }
-
-carregarComandas();
 
 // const api = 'https://menuonproject.onrender.com/api/comandas';
 
