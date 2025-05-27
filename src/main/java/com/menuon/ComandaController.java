@@ -3,6 +3,7 @@ package com.menuon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comandas")
@@ -37,12 +38,30 @@ public class ComandaController {
         return repository.save(c);
     }
 
+    // ✅ Atualizar TODOS os campos de uma comanda
     @PutMapping("/{id}")
     public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda atualizada) {
         Comanda c = repository.findById(id).orElseThrow();
-        if (atualizada.getStatus() != null) {
-            c.setStatus(atualizada.getStatus());
+
+        c.setCliente(atualizada.getCliente());
+        c.setItens(atualizada.getItens());
+        c.setValorTotal(atualizada.getValorTotal());
+        c.setData(atualizada.getData());
+        c.setStatus(atualizada.getStatus());
+
+        return repository.save(c);
+    }
+
+    // ✅ Atualizar SÓ o STATUS (Pago / Em Aberto)
+    @PutMapping("/{id}/status")
+    public Comanda atualizarStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        Comanda c = repository.findById(id).orElseThrow();
+
+        String novoStatus = body.get("status");
+        if (novoStatus != null) {
+            c.setStatus(novoStatus);
         }
+
         return repository.save(c);
     }
 

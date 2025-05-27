@@ -13,7 +13,7 @@ const produtos = [
 ];
 
 const container = document.getElementById('produtos');
-let idEditando = null;  // ✅ Para saber se está editando
+let idEditando = null;
 
 produtos.forEach((produto, index) => {
     const div = document.createElement('div');
@@ -37,6 +37,7 @@ function alterarQuantidade(index, delta) {
 
 document.getElementById('comanda-form').addEventListener('submit', async e => {
     e.preventDefault();
+
     const cliente = document.getElementById('cliente').value;
     const pedidos = [];
     let valorTotal = 0;
@@ -51,10 +52,15 @@ document.getElementById('comanda-form').addEventListener('submit', async e => {
         }
     });
 
-    const comanda = { cliente, pedidos, valorTotal, data: new Date().toISOString().split('T')[0] };
+    const comanda = {
+        cliente,
+        pedidos,
+        valorTotal,
+        data: new Date().toISOString().split('T')[0],
+        status: 'pendente'
+    };
 
     if (idEditando) {
-        // ✅ PUT para editar
         await fetch(`${api}/${idEditando}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -62,7 +68,6 @@ document.getElementById('comanda-form').addEventListener('submit', async e => {
         });
         idEditando = null;
     } else {
-        // ✅ POST para criar
         await fetch(api, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -75,67 +80,75 @@ document.getElementById('comanda-form').addEventListener('submit', async e => {
     e.target.reset();
 });
 
-async function carregarComandas(endpoint, containerId) {
-    const lista = document.getElementById(containerId);
+async function carregarComandas() {
+    const lista = document.getElementById('comandas');
     lista.innerHTML = '';
 
-    const resposta = await fetch(api + endpoint);
+    const resposta = await fetch(api);
     const comandas = await resposta.json();
 
     comandas.forEach(c => {
         const item = document.createElement('li');
 
-        let pedidosTexto = '';
+        let pedidosTexto = 'Nenhum pedido';
         if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
-            pedidosTexto = c.pedidos.map(p =>
-                `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
-            ).join(', ');
-        } else {
-            pedidosTexto = 'Nenhum pedido';
+            pedidosTexto = c.pedidos.map(p => `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`).join(', ');
         }
 
         item.innerHTML = `
             <strong>Cliente:</strong> ${c.cliente}<br>
-            <strong>Total:</strong> ${c.valorTotal}<br>
+            <strong>Total:</strong> R$ ${c.valorTotal}<br>
             <strong>Data:</strong> ${c.data}<br>
             <strong>Status:</strong> ${c.status}<br>
-            <strong>Pedidos:</strong> ${c.pedidos.map(i => `${i.produto} x${i.quantidade}`).join(', ')}<br>
-            <button onclick='editarComanda(${JSON.stringify(c)})'>Editar</button>
-            <button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>
-            <button onclick="marcarComoPago(${c.id})">Pago</button>
+            <strong>Pedidos:</strong> ${pedidosTexto}<br>
+            ${botoesComanda(c)}
         `;
+
         lista.appendChild(item);
     });
 }
+
+function botoesComanda(c) {
+    let botoes = '';
+
+    if (c.status === 'pendente') {
+        botoes += `<button onclick='editarComanda(${JSON.stringify(c).replace(/'/g, "\\'")})'>Editar</button>`;
+        botoes += `<button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>`;
+        botoes += `<button onclick="marcarComoPago(${c.id})">Pago</button>`;
+    } else if (c.status === 'em_aberto') {
+        botoes += `<button onclick="marcarComoPago(${c.id})">Pago</button>`;
+    }
+    // Se for pago, nenhum botão.
+
+    return botoes;
+}
+
 async function marcarComoEmAberto(id) {
-    await fetch(`${api}/${id}`, {
+    await fetch(`${api}/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'em_aberto' })
     });
-    location.reload();
+    carregarComandas();
 }
 
 async function marcarComoPago(id) {
-    await fetch(`${api}/${id}`, {
+    await fetch(`${api}/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'paga' })
     });
-    location.reload();
+    carregarComandas();
 }
-
 
 function editarComanda(comanda) {
     document.getElementById('cliente').value = comanda.cliente;
 
-    // Limpa as seleções e quantidades
     produtos.forEach((produto, index) => {
         document.getElementById('check-' + index).checked = false;
         document.getElementById('quant-' + index).textContent = '0';
     });
 
-    // Marca os pedidos existentes
     if (Array.isArray(comanda.pedidos)) {
         comanda.pedidos.forEach(p => {
             const index = produtos.findIndex(prod => prod.nome === p.produto);
@@ -150,8 +163,6 @@ function editarComanda(comanda) {
 }
 
 carregarComandas();
-
-
 
 
 
