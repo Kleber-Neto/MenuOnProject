@@ -99,7 +99,7 @@ async function carregarComandas(endpoint, containerId) {
             <strong>Total:</strong> ${c.valorTotal}<br>
             <strong>Data:</strong> ${c.data}<br>
             <strong>Status:</strong> ${c.status}<br>
-            <strong>Pedidos:</strong> ${c.itens.map(i => `${i.produto} x${i.quantidade}`).join(', ')}<br>
+            <strong>Pedidos:</strong> ${c.pedidos.map(i => `${i.produto} x${i.quantidade}`).join(', ')}<br>
             <button onclick='editarComanda(${JSON.stringify(c)})'>Editar</button>
             <button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>
             <button onclick="marcarComoPago(${c.id})">Pago</button>
