@@ -75,7 +75,7 @@ document.getElementById('comanda-form').addEventListener('submit', async e => {
     e.target.reset();
 });
 
-async function carregarComandas(endpoint, containerId) {
+async function carregarComandas(endpoint, containerId, exibirBotoes = {editar: true, emAberto: true, pago: true}) {
     const lista = document.getElementById(containerId);
     lista.innerHTML = '';
 
@@ -85,13 +85,11 @@ async function carregarComandas(endpoint, containerId) {
     comandas.forEach(c => {
         const item = document.createElement('li');
 
-        let pedidosTexto = '';
+        let pedidosTexto = 'Nenhum pedido';
         if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
             pedidosTexto = c.pedidos.map(p =>
                 `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
             ).join(', ');
-        } else {
-            pedidosTexto = 'Nenhum pedido';
         }
 
         item.innerHTML = `
@@ -99,14 +97,35 @@ async function carregarComandas(endpoint, containerId) {
             <strong>Total:</strong> ${c.valorTotal}<br>
             <strong>Data:</strong> ${c.data}<br>
             <strong>Status:</strong> ${c.status}<br>
-            <strong>Pedidos:</strong> ${c.pedidos.map(i => `${i.produto} x${i.quantidade}`).join(', ')}<br>
-            <button onclick='editarComanda(${JSON.stringify(c)})'>Editar</button>
-            <button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>
-            <button onclick="marcarComoPago(${c.id})">Pago</button>
+            <strong>Pedidos:</strong> ${pedidosTexto}<br>
         `;
+
+        // Botões conforme exibirBotoes
+        if (exibirBotoes.editar) {
+            const btnEditar = document.createElement('button');
+            btnEditar.textContent = 'Editar';
+            btnEditar.onclick = () => editarComanda(c);
+            item.appendChild(btnEditar);
+        }
+
+        if (exibirBotoes.emAberto) {
+            const btnEmAberto = document.createElement('button');
+            btnEmAberto.textContent = 'Em Aberto';
+            btnEmAberto.onclick = () => marcarComoEmAberto(c.id);
+            item.appendChild(btnEmAberto);
+        }
+
+        if (exibirBotoes.pago) {
+            const btnPago = document.createElement('button');
+            btnPago.textContent = 'Pago';
+            btnPago.onclick = () => marcarComoPago(c.id);
+            item.appendChild(btnPago);
+        }
+
         lista.appendChild(item);
     });
 }
+
 async function marcarComoEmAberto(id) {
     await fetch(`${api}/${id}`, {
         method: 'PUT',
