@@ -168,6 +168,8 @@ function editarComanda(comanda) {
     idEditando = comanda.id;
 }
 
+carregarComandas();
+
 // const api = 'https://menuonproject.onrender.com/api/comandas';
 
 // const produtos = [
