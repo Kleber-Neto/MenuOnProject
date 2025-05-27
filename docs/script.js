@@ -107,7 +107,6 @@ async function carregarComandas(endpoint, containerId) {
         lista.appendChild(item);
     });
 }
-
 async function marcarComoEmAberto(id) {
     await fetch(`${api}/${id}`, {
         method: 'PUT',
