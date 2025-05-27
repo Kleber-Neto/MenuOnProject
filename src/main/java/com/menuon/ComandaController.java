@@ -40,11 +40,30 @@ public class ComandaController {
     @PutMapping("/{id}")
     public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda atualizada) {
         Comanda c = repository.findById(id).orElseThrow();
+
+        // Atualiza todos os campos importantes
+        c.setCliente(atualizada.getCliente());
+        c.setPedidos(atualizada.getPedidos()); // ou setItens, veja como está na sua entidade.
+        c.setValorTotal(atualizada.getValorTotal());
+        c.setData(atualizada.getData());
+
+        // Atualiza o status só se for enviado
         if (atualizada.getStatus() != null) {
             c.setStatus(atualizada.getStatus());
         }
+
         return repository.save(c);
     }
+
+    // @PutMapping("/{id}")
+    // public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda
+    // atualizada) {
+    // Comanda c = repository.findById(id).orElseThrow();
+    // if (atualizada.getStatus() != null) {
+    // c.setStatus(atualizada.getStatus());
+    // }
+    // return repository.save(c);
+    // }
 
     @DeleteMapping("/{id}")
     public void excluir(@PathVariable Long id) {
