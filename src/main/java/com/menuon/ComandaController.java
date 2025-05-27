@@ -57,7 +57,7 @@ public class ComandaController {
     public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda atualizada) {
         Comanda comanda = repository.findById(id).orElseThrow();
         comanda.setCliente(atualizada.getCliente());
-        comanda.setItens(atualizada.getItens());
+        comanda.setPedidos(atualizada.getPedidos());
         comanda.setValorTotal(atualizada.getValorTotal());
         comanda.setData(atualizada.getData());
         comanda.setStatus(atualizada.getStatus());
