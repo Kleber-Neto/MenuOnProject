@@ -13,23 +13,20 @@ const produtos = [
 ];
 
 const container = document.getElementById('produtos');
-let idEditando = null;
+let idEditando = null;  // ✅ Para saber se está editando
 
-// Criar os elementos de produto
-if (container) {
-    produtos.forEach((produto, index) => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-            <label>
-                <input type="checkbox" id="check-${index}"> ${produto.nome} (R$ ${produto.preco})
-            </label>
-            <button type="button" onclick="alterarQuantidade(${index}, -1)">-</button>
-            <span id="quant-${index}">0</span>
-            <button type="button" onclick="alterarQuantidade(${index}, 1)">+</button>
-        `;
-        container.appendChild(div);
-    });
-}
+produtos.forEach((produto, index) => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+        <label>
+            <input type="checkbox" id="check-${index}"> ${produto.nome} (R$ ${produto.preco})
+        </label>
+        <button type="button" onclick="alterarQuantidade(${index}, -1)">-</button>
+        <span id="quant-${index}">0</span>
+        <button type="button" onclick="alterarQuantidade(${index}, 1)">+</button>
+    `;
+    container.appendChild(div);
+});
 
 function alterarQuantidade(index, delta) {
     const span = document.getElementById('quant-' + index);
@@ -38,136 +35,107 @@ function alterarQuantidade(index, delta) {
     span.textContent = qtd;
 }
 
-const form = document.getElementById('comanda-form');
-if (form) {
-    form.addEventListener('submit', async e => {
-        e.preventDefault();
+document.getElementById('comanda-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const cliente = document.getElementById('cliente').value;
+    const pedidos = [];
+    let valorTotal = 0;
 
-        const cliente = document.getElementById('cliente').value;
-        const pedidos = [];
-        let valorTotal = 0;
-
-        produtos.forEach((produto, index) => {
-            if (document.getElementById('check-' + index).checked) {
-                const quantidade = parseInt(document.getElementById('quant-' + index).textContent);
-                if (quantidade > 0) {
-                    pedidos.push({ produto: produto.nome, quantidade, precoUnitario: produto.preco });
-                    valorTotal += quantidade * produto.preco;
-                }
+    produtos.forEach((produto, index) => {
+        if (document.getElementById('check-' + index).checked) {
+            const quantidade = parseInt(document.getElementById('quant-' + index).textContent);
+            if (quantidade > 0) {
+                pedidos.push({ produto: produto.nome, quantidade, precoUnitario: produto.preco });
+                valorTotal += quantidade * produto.preco;
             }
-        });
-
-        const comanda = {
-            cliente,
-            pedidos,
-            valorTotal,
-            data: new Date().toISOString().split('T')[0],
-            status: 'pendente'
-        };
-
-        if (idEditando) {
-            await fetch(`${api}/${idEditando}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(comanda)
-            });
-            idEditando = null;
-        } else {
-            await fetch(api, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(comanda)
-            });
         }
-
-        alert('Comanda salva!');
-        carregarComandas();
-        e.target.reset();
     });
-}
 
-async function carregarComandas() {
-    const lista = document.getElementById('comandas');
-    if (!lista) return;
+    const comanda = { cliente, pedidos, valorTotal, data: new Date().toISOString().split('T')[0] };
 
+    if (idEditando) {
+        // ✅ PUT para editar
+        await fetch(`${api}/${idEditando}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(comanda)
+        });
+        idEditando = null;
+    } else {
+        // ✅ POST para criar
+        await fetch(api, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(comanda)
+        });
+    }
+
+    alert('Comanda salva!');
+    carregarComandas();
+    e.target.reset();
+});
+
+async function carregarComandas(endpoint, containerId) {
+    const lista = document.getElementById(containerId);
     lista.innerHTML = '';
 
-    const resposta = await fetch(api);
+    const resposta = await fetch(api + endpoint);
     const comandas = await resposta.json();
 
-    const pagina = window.location.pathname;
-    let statusFiltro = 'pendente';
+    comandas.forEach(c => {
+        const item = document.createElement('li');
 
-    if (pagina.includes('pagas.html')) {
-        statusFiltro = 'paga';
-    } else if (pagina.includes('em_aberto.html')) {
-        statusFiltro = 'em_aberto';
-    }
+        let pedidosTexto = '';
+        if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
+            pedidosTexto = c.pedidos.map(p =>
+                `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`
+            ).join(', ');
+        } else {
+            pedidosTexto = 'Nenhum pedido';
+        }
 
-    comandas
-        .filter(c => c.status === statusFiltro)
-        .forEach(c => {
-            const item = document.createElement('li');
-
-            let pedidosTexto = 'Nenhum pedido';
-            if (Array.isArray(c.pedidos) && c.pedidos.length > 0) {
-                pedidosTexto = c.pedidos.map(p => `${p.quantidade}x ${p.produto} (R$ ${p.precoUnitario})`).join(', ');
-            }
-
-            item.innerHTML = `
-                <strong>Cliente:</strong> ${c.cliente}<br>
-                <strong>Total:</strong> R$ ${c.valorTotal}<br>
-                <strong>Data:</strong> ${c.data}<br>
-                <strong>Status:</strong> ${c.status}<br>
-                <strong>Pedidos:</strong> ${pedidosTexto}<br>
-                ${botoesComanda(c, statusFiltro)}
-            `;
-
-            lista.appendChild(item);
-        });
+        item.innerHTML = `
+            <strong>Cliente:</strong> ${c.cliente}<br>
+            <strong>Total:</strong> ${c.valorTotal}<br>
+            <strong>Data:</strong> ${c.data}<br>
+            <strong>Status:</strong> ${c.status}<br>
+            <strong>Pedidos:</strong> ${c.pedidos.map(i => `${i.produto} x${i.quantidade}`).join(', ')}<br>
+            <button onclick='editarComanda(${JSON.stringify(c)})'>Editar</button>
+            <button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>
+            <button onclick="marcarComoPago(${c.id})">Pago</button>
+        `;
+        lista.appendChild(item);
+    });
 }
-
-function botoesComanda(c, statusFiltro) {
-    let botoes = '';
-
-    if (statusFiltro === 'pendente') {
-        botoes += `<button onclick='editarComanda(${JSON.stringify(c).replace(/'/g, "\\'")})'>Editar</button>`;
-        botoes += `<button onclick="marcarComoEmAberto(${c.id})">Em Aberto</button>`;
-        botoes += `<button onclick="marcarComoPago(${c.id})">Pago</button>`;
-    } else if (statusFiltro === 'em_aberto') {
-        botoes += `<button onclick="marcarComoPago(${c.id})">Pago</button>`;
-    }
-    // Se for "paga" não exibe botão.
-
-    return botoes;
-}
-
 async function marcarComoEmAberto(id) {
-    await fetch(`${api}/${id}/status`, {
+    await fetch(`${api}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'em_aberto' })
     });
-    carregarComandas();
+    location.reload();
 }
 
 async function marcarComoPago(id) {
-    await fetch(`${api}/${id}/status`, {
+    await fetch(`${api}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'paga' })
     });
-    carregarComandas();
+    location.reload();
 }
+
 
 function editarComanda(comanda) {
     document.getElementById('cliente').value = comanda.cliente;
 
+    // Limpa as seleções e quantidades
     produtos.forEach((produto, index) => {
         document.getElementById('check-' + index).checked = false;
         document.getElementById('quant-' + index).textContent = '0';
     });
 
+    // Marca os pedidos existentes
     if (Array.isArray(comanda.pedidos)) {
         comanda.pedidos.forEach(p => {
             const index = produtos.findIndex(prod => prod.nome === p.produto);
