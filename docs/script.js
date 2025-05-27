@@ -122,7 +122,7 @@ async function carregarComandas(endpoint, containerId, exibirBotoes = {editar: t
             item.appendChild(btnPago);
         }
 
-        lista.appendChild(pedidos);
+        lista.appendChild(item);
     });
 }
 
