@@ -151,8 +151,6 @@ function editarComanda(comanda) {
 
 carregarComandas();
 
-
-
 // const api = 'https://menuonproject.onrender.com/api/comandas';
 
 // const produtos = [

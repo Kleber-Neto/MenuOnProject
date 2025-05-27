@@ -3,7 +3,6 @@ package com.menuon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comandas")
@@ -38,49 +37,14 @@ public class ComandaController {
         return repository.save(c);
     }
 
-    // ✅ Atualizar TODOS os campos de uma comanda
-    // @PutMapping("/{id}")
-    // public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda
-    // atualizada) {
-    // Comanda c = repository.findById(id).orElseThrow();
-
-    // c.setCliente(atualizada.getCliente());
-    // c.setPedidos(atualizada.getPedidos());
-    // c.setValorTotal(atualizada.getValorTotal());
-    // c.setData(atualizada.getData());
-    // c.setStatus(atualizada.getStatus());
-
-    // return repository.save(c);
-    // }
-
-    // @PutMapping("/{id}")
-    // public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda
-    // atualizada) {
-    // Comanda comanda = repository.findById(id).orElseThrow();
-    // comanda.setCliente(atualizada.getCliente());
-    // comanda.setPedidos(atualizada.getPedidos());
-    // comanda.setValorTotal(atualizada.getValorTotal());
-    // comanda.setData(atualizada.getData());
-    // comanda.setStatus(atualizada.getStatus());
-    // return repository.save(comanda);
-    // }
-
     @PutMapping("/{id}")
     public Comanda atualizar(@PathVariable Long id, @RequestBody Comanda atualizada) {
-        Comanda comanda = repository.findById(id).orElseThrow();
+        Comanda c = repository.findById(id).orElseThrow();
         if (atualizada.getStatus() != null) {
-            comanda.setStatus(atualizada.getStatus());
+            c.setStatus(atualizada.getStatus());
         }
-        return repository.save(comanda);
+        return repository.save(c);
     }
-
-    // @PutMapping("/{id}/status")
-    // public Comanda atualizarStatus(@PathVariable Long id, @RequestBody
-    // Map<String, String> body) {
-    // Comanda c = repository.findById(id).orElseThrow();
-    // c.setStatus(body.get("status"));
-    // return repository.save(c);
-    // }
 
     @DeleteMapping("/{id}")
     public void excluir(@PathVariable Long id) {
