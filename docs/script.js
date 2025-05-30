@@ -1,15 +1,17 @@
 const api = 'https://menuonproject.onrender.com/api/comandas';
 
 const produtos = [
-    { nome: 'Pastel 1', preco: 5.0 },
-    { nome: 'Pastel 2', preco: 6.0 },
-    { nome: 'Pastel completo', preco: 8.0 },
-    { nome: 'Tapioca', preco: 4.0 },
-    { nome: 'Coxinhas', preco: 3.5 },
-    { nome: 'Sopa', preco: 7.0 },
-    { nome: 'Açaí 1', preco: 10.0 },
-    { nome: 'Açaí 2', preco: 12.0 },
-    { nome: 'H2O', preco: 2.0 }
+    { nome: 'Pastel 1', preco: 7.0 },
+    { nome: 'Pastel 2', preco: 8.50 },
+    { nome: 'Pastel 3', preco: 10.0 },
+    { nome: 'Tapioca',  preco: 6.0 },
+    { nome: 'Sopa',     preco: 9.0 },
+    { nome: 'Açaí 1',   preco: 5.0 },
+    { nome: 'Açaí 2',  preco: 10.0 },
+    { nome: 'H2O',      preco: 8.0 },
+    { nome: 'Coca 1', preco: 10.0  },
+    { nome: 'Coca 2 ', preco: 14.0 },
+    {nome: 'Variados', preco: 10.0 },
 ];
 
 const container = document.getElementById('produtos');
@@ -18,9 +20,10 @@ let idEditando = null;
 if (container) {
     produtos.forEach((produto, index) => {
         const div = document.createElement('div');
+        div.className = 'produto';
         div.innerHTML = `
             <label>
-                <input type="checkbox" id="check-${index}"> ${produto.nome} (R$ ${produto.preco})
+                <input type="checkbox" id="check-${index}"> ${produto.nome} (R$${produto.preco})
             </label>
             <button type="button" onclick="alterarQuantidade(${index}, -1)">-</button>
             <span id="quant-${index}">0</span>
@@ -103,10 +106,10 @@ async function carregarComandas(statusDesejado) {
 
             item.innerHTML = `
                 <strong>Cliente:</strong> ${c.cliente}<br>
+                <strong>Pedidos:</strong> ${pedidosTexto}<br>
                 <strong>Total:</strong> R$ ${c.valorTotal}<br>
                 <strong>Data:</strong> ${c.data}<br>
                 <strong>Status:</strong> ${c.status}<br>
-                <strong>Pedidos:</strong> ${pedidosTexto}<br>
                 ${botoesComanda(c)}
             `;
 
@@ -169,6 +172,14 @@ function editarComanda(comanda) {
 }
 
 carregarComandas();
+
+
+// Registro do service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker registrado!'))
+    .catch(err => console.log('Erro ao registrar Service Worker', err));
+}
 
 // const api = 'https://menuonproject.onrender.com/api/comandas';
 

@@ -3,24 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#478bca">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon-192.png" type="image/png">
     <title>Comandas em aberto - MenuOn</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #333;
-            color: #fff;
-            text-align: center;
-        }
-
-        li {
-            margin-bottom: 10px;
-        }
-
-        button {
-            margin: 0 2px;
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -28,12 +17,12 @@
     <ul id="comandas"></ul>
 
     <script src="script.js"></script>
-    
 
-<script>
-    const statusAtual = 'em_aberto';
-    carregarComandas(statusAtual);
-</script>
+
+    <script>
+        const statusAtual = 'em_aberto';
+        carregarComandas(statusAtual);
+    </script>
 
 
 </body>

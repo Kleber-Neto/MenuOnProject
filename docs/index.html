@@ -1,40 +1,51 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#478bca">
+
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon-192.png" type="image/png">
     <title>MenuOn</title>
-    
+
 </head>
+
 <body>
 
-    <h1>Cardápio</h1>
+    <h1>CARD<em>ÁPIO</em></h1>
 
     <form id="comanda-form">
-        <label for="cliente">Cliente:</label>
-        <input type="text" id="cliente" required><br><br>
+        <input type="text" id="cliente" placeholder="CLIENTE" required>
 
-        <div id="produtos">
-            <!-- Produtos vão ser inseridos aqui pelo script.js -->
-        </div><br>
+        <div id="produtos"></div>
 
-        <button type="submit">Salvar Comanda</button>
+        <button type="submit" class="btn-salvar">SALVAR</button>
+
     </form>
-    <a href="pagas.html" ><button>Comandas Pagas</button></a>
-    <br>
-     <a href="em_aberto.html" ><button>Comandas em aberto</button></a>
+    
+    <div class="btn-container">
+    <a href="informes.html">
+        <button class="btn-informes">INFORMES</button>
+    </a>
 
-    <h2>Comandas</h2>
-    <ul id="comandas"></ul>
-        <!-- Comandas aparecerão aqui -->
+    </div>
+    <br>
+    <br>
+
+    <h1>COMA<em>NDAS</em></h1>
+
+    <ul id="comandas">
+        <!-- Comandas serão inseridas aqui pelo script.js -->
     </ul>
 
     <script src="script.js"></script>
     <script>
-    const statusAtual = 'pendente';
-    carregarComandas(statusAtual);
-</script>
+        const statusAtual = 'pendente';
+        carregarComandas(statusAtual);
+    </script>
 
 </body>
+
 </html>

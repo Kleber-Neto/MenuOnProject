@@ -1,35 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Comandas Pagas - MenuOn</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-             background: #333;
-             color: #fff;
-             text-align: center;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        button {
-            margin: 0 2px;
-        }
-    </style>
-</head>
-<body>
-<h1>Comandas Pagas</h1>
-<ul id="comandas"></ul>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#478bca">
 
-<script src="script.js"></script>
-<script>
-    const statusAtual = 'paga';
-    carregarComandas(statusAtual);
-</script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon-192.png" type="image/png">
+    <title>Comandas Pagas - MenuOn</title>
+    
+</head>
+
+<body>
+    <h1>Comandas Pagas</h1>
+    <ul id="comandas"></ul>
+
+    <script src="script.js"></script>
+    <script>
+        const statusAtual = 'paga';
+        carregarComandas(statusAtual);
+    </script>
 
 
 
 </body>
+
 </html>
