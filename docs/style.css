@@ -6,7 +6,7 @@ body {
     flex-direction: column;
     align-items: center;
      justify-content: center;
-     padding: 10px; /* Adicionado */
+    
 }
 
 h1 {
@@ -48,7 +48,7 @@ form {
     background: #1e1e1e;
     padding: 10px;
     border-radius: 8px;
-    flex-wrap: wrap; /* Quebra se faltar espaço */
+    /* flex-wrap: wrap; Quebra se faltar espaço */
 }
 
 .produto label {
