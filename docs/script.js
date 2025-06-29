@@ -1,4 +1,4 @@
-const api = 'https://menuonproject-production.up.railway.app';
+const api = 'https://menuonproject-production.up.railway.app/api/comandas';
 
 const produtos = [
     { nome: 'Pastel 1', preco: 7.0 },
