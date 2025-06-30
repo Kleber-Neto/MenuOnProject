@@ -1,5 +1,7 @@
 package com.menuon;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,25 +17,54 @@ public class ItemComanda {
 
     @ManyToOne
     @JoinColumn(name = "comanda_id")
+    @JsonBackReference
     private Comanda comanda;
 
+    // @ManyToOne
+    // @JoinColumn(name = "comanda_id")
+    // private Comanda comanda;
+
     // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getProduto() { return produto; }
-    public void setProduto(String produto) { this.produto = produto; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public int getQuantidade() { return quantidade; }
-    public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
+    public String getProduto() {
+        return produto;
+    }
 
-    public double getPrecoUnitario() { return precoUnitario; }
-    public void setPrecoUnitario(double precoUnitario) { this.precoUnitario = precoUnitario; }
+    public void setProduto(String produto) {
+        this.produto = produto;
+    }
 
-    public Comanda getComanda() { return comanda; }
-    public void setComanda(Comanda comanda) { this.comanda = comanda; }
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public double getPrecoUnitario() {
+        return precoUnitario;
+    }
+
+    public void setPrecoUnitario(double precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
+
+    public Comanda getComanda() {
+        return comanda;
+    }
+
+    public void setComanda(Comanda comanda) {
+        this.comanda = comanda;
+    }
 }
-
 
 // teste
 
@@ -44,48 +75,48 @@ public class ItemComanda {
 // @Entity
 // public class ItemComanda {
 
-//     @Id
-//     @GeneratedValue
-//     private Long id;
+// @Id
+// @GeneratedValue
+// private Long id;
 
-//     private String produto;
-//     private Integer quantidade;
-//     private Double precoUnitario;
+// private String produto;
+// private Integer quantidade;
+// private Double precoUnitario;
 
-//     // ✅ Construtor padrão
-//     public ItemComanda() {
-//     }
+// // ✅ Construtor padrão
+// public ItemComanda() {
+// }
 
-//     // ✅ Getters e Setters
-//     public Long getId() {
-//         return id;
-//     }
+// // ✅ Getters e Setters
+// public Long getId() {
+// return id;
+// }
 
-//     public void setId(Long id) {
-//         this.id = id;
-//     }
+// public void setId(Long id) {
+// this.id = id;
+// }
 
-//     public String getProduto() {
-//         return produto;
-//     }
+// public String getProduto() {
+// return produto;
+// }
 
-//     public void setProduto(String produto) {
-//         this.produto = produto;
-//     }
+// public void setProduto(String produto) {
+// this.produto = produto;
+// }
 
-//     public Integer getQuantidade() {
-//         return quantidade;
-//     }
+// public Integer getQuantidade() {
+// return quantidade;
+// }
 
-//     public void setQuantidade(Integer quantidade) {
-//         this.quantidade = quantidade;
-//     }
+// public void setQuantidade(Integer quantidade) {
+// this.quantidade = quantidade;
+// }
 
-//     public Double getPrecoUnitario() {
-//         return precoUnitario;
-//     }
+// public Double getPrecoUnitario() {
+// return precoUnitario;
+// }
 
-//     public void setPrecoUnitario(Double precoUnitario) {
-//         this.precoUnitario = precoUnitario;
-//     }
+// public void setPrecoUnitario(Double precoUnitario) {
+// this.precoUnitario = precoUnitario;
+// }
 // }
