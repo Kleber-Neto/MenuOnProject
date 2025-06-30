@@ -72,7 +72,7 @@ if (container) {
             });
         }
 
-        // alert('Comanda salva!');
+        alert('Comanda salva!');
         carregarComandas(statusAtual);
         e.target.reset();
     });
