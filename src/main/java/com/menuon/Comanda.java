@@ -15,9 +15,11 @@ public class Comanda {
     private double valorTotal;
     private String status;
 
-    @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
     private List<ItemComanda> pedidos;
 
+    // orphanRemoval = true
+    
     // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
