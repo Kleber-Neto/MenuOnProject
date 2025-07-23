@@ -1,4 +1,6 @@
-const api = 'https://menuonproject-production.up.railway.app/api/comandas';
+const api = 'http://168.75.78.121:8080/api/comandas';
+
+// const api = 'https://menuonproject-production.up.railway.app/api/comandas';
 
 const produtos = [
     { nome: 'Pastel 1', preco: 7.0 },
