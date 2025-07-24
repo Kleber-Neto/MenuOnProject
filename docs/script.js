@@ -1,4 +1,4 @@
-const api = 'http://168.75.78.121:8080/api/comandas';
+const api = 'http://137.131.178.47:8080/api/comandas';
 
 // const api = 'https://menuonproject-production.up.railway.app/api/comandas';
 
